@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chameleon Negotiatione - Mint Your NFT</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.0/dist/ethers.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header h1 {
+    font-size: 3rem;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+    margin-bottom: 0.5rem;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.social-link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.social-link.discord {
+    background: linear-gradient(45deg, #5865F2, #7289DA);
+}
+
+.social-link.twitter {
+    background: linear-gradient(45deg, #1DA1F2, #2795D9);
+}
+
+.social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-link i {
+    margin-right: 0.5rem;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.mint-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    text-align: center;
+    min-width: 200px;
+}
+
+.info-card h3 {
+    color: #5a67d8;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.info-card .number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d3748;
+}
+
+.minting-section {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(31, 38, 135, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    margin-bottom: 2rem;
+}
+
+.wallet-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.wallet-status {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.connected {
+    color: #28a745;
+}
+
+.disconnected {
+    color: #dc3545;
+}
+
+.mint-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mint-section h3 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.price-display {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #4a5568;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+
+.btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.btn:disabled {
+    background: linear-gradient(45deg, #a0aec0, #cbd5e0);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #48bb78, #38b2ac);
+}
+
+.btn-connect {
+    background: linear-gradient(45deg, #ed8936, #dd6b20);
+}
+
+.nft-display {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(31, 38, 135, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    text-align: center;
+}
+
+.nft-display h2 {
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.nft-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.nft-item {
+    background: white;
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.nft-item:hover {
+    transform: translateY(-5px);
+}
+
+.nft-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.status-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .mint-info {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Chameleon Negotiatione</h1>
+        <p class="subtitle">Building, Trading, Investing in the Hyperliquid Ecosystem</p>
+        <p class="subtitle">All HYPE becomes part of a treasury which invests in yield strategies and guarantees a floor buyback price which grows with the yields</p>
+        <div class="social-links">
+            <a href="https://discord.com/channels/1381790859321802772/1381791055350992978" target="_blank" class="social-link discord"><i class="fab fa-discord"></i> Join our Discord</a>
+            <a href="https://x.com/Hy_Purr_liquid" target="_blank" class="social-link twitter"><i class="fab fa-x-twitter"></i> Follow us on X</a>
+        </div>
+    </div>
+
+    <div class="mint-info">
+        <div class="info-card">
+            <h3>Current Supply</h3>
+            <div class="number"><span id="mintedCount">0</span> / 800</div>
+        </div>
+        <div class="info-card">
+            <h3>Price per NFT</h3>
+            <div class="number" id="priceDisplay">Loading...</div>
+        </div>
+    </div>
+
+    <div class="minting-section">
+        <div class="wallet-section">
+            <div class="wallet-status">
+                <span id="walletStatus" class="disconnected">Wallet Not Connected</span>
+            </div>
+            <button id="connectWalletButton" class="btn btn-connect">Connect Wallet</button>
+        </div>
+
+        <div id="mintingControls" style="display: none;">
+            <div class="mint-section">
+                <h3>Mint 1 NFT</h3>
+                <div class="price-display">
+                    Current Price: <strong><span id="currentPrice">Loading...</span></strong>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button id="mintButton" class="btn btn-primary">
+                    <span id="mintButtonText">Mint 1 NFT</span>
+                </button>
+            </div>
+            <div id="statusMessage" class="status-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div id="nftDisplay" class="nft-display" style="display: none;">
+        <h2>Your Minted NFT:</h2>
+        <div id="nftGallery" class="nft-gallery"></div>
+    </div>
+</div>
+
+<script>
+let provider;
+let signer;
+let contract;
+let userAddress;
+
+// Contract details for Hyperliquid EVM
+const contractAddress = "0x4Db0bf7021a970A00b379EB87BD7edB9835daDe5";
+const contractABI = [
+    // Read functions
+    "function currentTokenId() view returns (uint256)",
+    "function totalCollectedFunds() view returns (uint256)",
+    "function buyBackPrice() view returns (uint256)",
+    "function Mint_Price() view returns (uint256)",
+    "function MAX_SUPPLY() view returns (uint256)",
+    "function getContractBalance() view returns (uint256)",
+    "function ownerOf(uint256 tokenId) view returns (address)",
+    "function balanceOf(address owner) view returns (uint256)",
+    "function tokenURI(uint256 tokenId) view returns (string)",
+    // Write functions
+    "function mint(uint256 quantity) payable",
+    "function sell_nft_to_contract(uint256 tokenId)",
+    "function buyNFT_from_contract(uint256 tokenId) payable",
+    // Events
+    "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
+    "event NFTBoughtBack(uint256 indexed tokenId, uint256 price)",
+    "event NFTSold(uint256 indexed tokenId, uint256 price)"
+];
+
+// Hyperliquid EVM network configuration
+const hyperliquidNetwork = {
+    chainId: '0x3E7', // 999 in hex
+    chainName: 'Hyperliquid EVM',
+    rpcUrls: ['https://rpc.hyperliquid.xyz/evm'],
+    nativeCurrency: {
+        name: 'HYPE',
+        symbol: 'HYPE',
+        decimals: 18
+    }
+};
+
+// DOM elements
+const connectWalletButton = document.getElementById('connectWalletButton');
+const mintButton = document.getElementById('mintButton');
+const mintButtonText = document.getElementById('mintButtonText');
+const walletStatus = document.getElementById('walletStatus');
+const mintingControls = document.getElementById('mintingControls');
+const statusMessage = document.getElementById('statusMessage');
+const nftDisplay = document.getElementById('nftDisplay');
+const nftGallery = document.getElementById('nftGallery');
+const mintedCount = document.getElementById('mintedCount');
+const priceDisplay = document.getElementById('priceDisplay');
+const currentPrice = document.getElementById('currentPrice');
+
+// Event listeners
+connectWalletButton.addEventListener('click', connectWallet);
+mintButton.addEventListener('click', mintNFT);
+
+// Initialize
+loadContractDataOnPageLoad();
+
+async function connectWallet() {
+    try {
+        if (typeof window.ethereum !== 'undefined') {
+            showLoading(connectWalletButton, 'Connecting...');
+            
+            // Check if we're on the correct network
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            if (chainId !== hyperliquidNetwork.chainId) {
+                try {
+                    // Try to switch to Hyperliquid network
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: hyperliquidNetwork.chainId }],
+                    });
+                } catch (switchError) {
+                    // If the network is not added, add it
+                    if (switchError.code === 4902) {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [hyperliquidNetwork],
+                        });
+                    } else {
+                        throw switchError;
+                    }
+                }
+            }
+
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            await provider.send("eth_requestAccounts", []);
+            signer = provider.getSigner();
+            userAddress = await signer.getAddress();
+
+            // Initialize contract
+            contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+            // Update UI
+            walletStatus.textContent = `Connected: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+            walletStatus.className = 'connected';
+            connectWalletButton.textContent = 'Wallet Connected';
+            connectWalletButton.disabled = true;
+            mintingControls.style.display = 'block';
+
+            // Update current data
+            await updateMintedCount();
+            await updateCurrentPrice();
+
+            showStatus('Wallet connected to Hyperliquid EVM!', 'success');
+        } else {
+            showStatus('Please install MetaMask to use this dApp!', 'error');
+        }
+    } catch (error) {
+        console.error('Error connecting wallet:', error);
+        showStatus('Failed to connect wallet. Please try again.', 'error');
+        resetButton(connectWalletButton, 'Connect Wallet');
+    }
+}
+
+async function mintNFT() {
+    try {
+        if (!contract) {
+            showStatus('Please connect your wallet first!', 'error');
+            return;
+        }
+
+        showLoading(mintButton, 'Minting 1 NFT...');
+
+        // Get exact price from contract - no JavaScript math involved
+        const exactPrice = await contract.Mint_Price();
+        console.log('Contract price (wei):', exactPrice.toString());
+        console.log('Contract price (HYPE):', ethers.utils.formatEther(exactPrice));
+
+        // Check user balance
+        const userBalance = await provider.getBalance(userAddress);
+        console.log('User balance (wei):', userBalance.toString());
+        console.log('User balance (HYPE):', ethers.utils.formatEther(userBalance));
+
+        if (userBalance.lt(exactPrice)) {
+            showStatus(`Insufficient balance. Need ${ethers.utils.formatEther(exactPrice)} HYPE`, 'error');
+            return;
+        }
+
+        // Mint exactly 1 NFT with exact contract price
+        const transaction = await contract.mint(1, {
+            value: exactPrice, // Exact BigNumber from contract
+            gasLimit: 300000
+        });
+
+        console.log('Transaction hash:', transaction.hash);
+        showStatus('Transaction submitted! Waiting for confirmation...', 'success');
+
+        const receipt = await provider.waitForTransaction(transaction.hash);
+        if (receipt.status === 1) {
+            showStatus('Successfully minted 1 NFT!', 'success');
+            await updateMintedCount();
+            await displayMintedNFT();
+        } else {
+            showStatus('Transaction failed. Please try again.', 'error');
+        }
+
+    } catch (error) {
+        console.error('Error minting NFT:', error);
+        if (error.message.includes('insufficient funds')) {
+            showStatus('Insufficient HYPE balance for minting + gas fees', 'error');
+        } else if (error.message.includes('user rejected')) {
+            showStatus('Transaction cancelled by user', 'error');
+        } else {
+            showStatus(`Minting failed: ${error.message}`, 'error');
+        }
+    } finally {
+        resetButton(mintButton, 'Mint 1 NFT');
+    }
+}
+
+// Load contract data without wallet connection (read-only)
+async function loadContractDataOnPageLoad() {
+    try {
+        const readOnlyProvider = new ethers.providers.JsonRpcProvider('https://rpc.hyperliquid.xyz/evm');
+        const readOnlyContract = new ethers.Contract(contractAddress, contractABI, readOnlyProvider);
+
+        // Get current supply
+        const currentSupply = await readOnlyContract.currentTokenId();
+        mintedCount.textContent = currentSupply.toString();
+
+        // Get price for display only
+        const mintPrice = await readOnlyContract.Mint_Price();
+        const priceForDisplay = ethers.utils.formatEther(mintPrice);
+        
+        // Update displays
+        priceDisplay.textContent = `${parseFloat(priceForDisplay).toFixed(6)} HYPE`;
+        if (currentPrice) {
+            currentPrice.textContent = `${parseFloat(priceForDisplay).toFixed(6)} HYPE`;
+        }
+        
+        console.log(`Loaded: Supply ${currentSupply}/800, Display Price: ${priceForDisplay} HYPE`);
+        console.log(`Exact price (wei): ${mintPrice.toString()}`);
+
+    } catch (error) {
+        console.error('Error loading contract data:', error);
+        priceDisplay.textContent = 'Error loading price';
+        if (currentPrice) {
+            currentPrice.textContent = 'Error loading price';
+        }
+    }
+}
+
+async function updateMintedCount() {
+    try {
+        if (contract) {
+            const currentSupply = await contract.currentTokenId();
+            mintedCount.textContent = currentSupply.toString();
+        }
+    } catch (error) {
+        console.error('Error updating minted count:', error);
+    }
+}
+
+async function updateCurrentPrice() {
+    try {
+        if (contract) {
+            const mintPrice = await contract.Mint_Price();
+            const priceForDisplay = ethers.utils.formatEther(mintPrice);
+            
+            if (currentPrice) {
+                currentPrice.textContent = `${parseFloat(priceForDisplay).toFixed(6)} HYPE`;
+            }
+        }
+    } catch (error) {
+        console.error('Error updating price:', error);
+    }
+}
+
+async function displayMintedNFT(receipt) {
+    try {
+        // Get the actual token ID from the transaction receipt
+        let tokenId = null;
+        
+        // Parse the transaction logs to find the Transfer event
+        const transferTopic = ethers.utils.id("Transfer(address,address,uint256)");
+        
+        for (let log of receipt.logs) {
+            if (log.topics[0] === transferTopic && log.address.toLowerCase() === contractAddress.toLowerCase()) {
+                // This is a Transfer event from our contract
+                const parsedLog = ethers.utils.defaultAbiCoder.decode(
+                    ['uint256'], 
+                    log.data
+                );
+                tokenId = parsedLog[0].toString();
+                break;
+            }
+        }
+        
+        // Fallback: get current token ID minus 1 (the one we just minted)
+        if (!tokenId) {
+            const currentSupply = await contract.currentTokenId();
+            tokenId = currentSupply.sub(1).toString();
+        }
+        
+        console.log('Minted NFT Token ID:', tokenId);
+        
+        // Try to get the token URI for metadata
+        let nftImage = null;
+        let nftName = `Chameleon Negotiatione #${tokenId}`;
+        
+        try {
+            const tokenURI = await contract.tokenURI(tokenId);
+            console.log('Token URI:', tokenURI);
+            
+            // If it's an IPFS URI, convert to gateway URL
+            if (tokenURI.startsWith('ipfs://')) {
+                const ipfsHash = tokenURI.replace('ipfs://', '');
+                nftImage = `https://ipfs.io/ipfs/${ipfsHash}`;
+            } else if (tokenURI.startsWith('http')) {
+                nftImage = tokenURI;
+            }
+        } catch (error) {
+            console.log('Could not fetch token URI:', error.message);
+        }
+        
+        // Display the NFT
+        nftDisplay.style.display = 'block';
+        
+        const nftItem = document.createElement('div');
+        nftItem.className = 'nft-item';
+        
+        if (nftImage) {
+            nftItem.innerHTML = `
+                <img src="${nftImage}" alt="${nftName}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px;" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div style="width: 100%; height: 200px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 10px; display: none; align-items: center; justify-content: center; color: white; font-size: 1.2rem; text-align: center;">
+                    ${nftName}
+                </div>
+                <p style="margin-top: 0.5rem; font-weight: bold;">${nftName}</p>
+                <p style="margin-top: 0.25rem; font-size: 0.9rem; color: #666;">Token ID: ${tokenId}</p>
+            `;
+        } else {
+            nftItem.innerHTML = `
+                <div style="width: 100%; height: 200px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; text-align: center;">
+                    ${nftName}
+                </div>
+                <p style="margin-top: 0.5rem; font-weight: bold;">${nftName}</p>
+                <p style="margin-top: 0.25rem; font-size: 0.9rem; color: #666;">Token ID: ${tokenId}</p>
+            `;
+        }
+        
+        // Clear previous NFTs and add new one
+        nftGallery.innerHTML = '';
+        nftGallery.appendChild(nftItem);
+        
+        // Add link to view on blockchain explorer
+        const explorerLink = document.createElement('div');
+        explorerLink.style.textAlign = 'center';
+        explorerLink.style.marginTop = '1rem';
+        explorerLink.innerHTML = `
+            <a href="https://app.hyperliquid.xyz/explorer/tx/${receipt.transactionHash}" 
+               target="_blank" 
+               style="color: #5a67d8; text-decoration: none; font-weight: bold;">
+                <i class="fas fa-external-link-alt"></i> View Transaction on Explorer
+            </a>
+        `;
+        nftDisplay.appendChild(explorerLink);
+        
+    } catch (error) {
+        console.error('Error displaying NFT:', error);
+        // Fallback display
+        nftDisplay.style.display = 'block';
+        nftGallery.innerHTML = `
+            <div class="nft-item">
+                <div style="width: 100%; height: 200px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; text-align: center;">
+                    Chameleon Negotiatione NFT
+                </div>
+                <p style="margin-top: 0.5rem; font-weight: bold;">Successfully Minted!</p>
+                <p style="margin-top: 0.25rem; font-size: 0.9rem; color: #666;">Check your wallet for details</p>
+            </div>
+        `;
+    }
+}
+
+function showLoading(button, text) {
+    button.innerHTML = `<span class="loading"></span>${text}`;
+    button.disabled = true;
+}
+
+function resetButton(button, text) {
+    button.innerHTML = text;
+    button.disabled = false;
+}
+
+function showStatus(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = `status-message ${type}`;
+    statusMessage.style.display = 'block';
+    
+    // Hide after 5 seconds
+    setTimeout(() => {
+        statusMessage.style.display = 'none';
+    }, 5000);
+}
+
+// Check if wallet is already connected on page load
+window.addEventListener('load', async () => {
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+            if (accounts.length > 0) {
+                // Auto-connect if previously connected
+                connectWallet();
+            }
+        } catch (error) {
+            console.error('Error checking wallet connection:', error);
+        }
+    }
+});
+</script>
+</body>
+</html>
